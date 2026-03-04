@@ -1,42 +1,48 @@
 version: 0.2
 
 phases:
-
   install:
     commands:
       - echo "Starting deployment experiment"
 
   build:
     commands:
+
       - echo "Deploying Template1 stacks"
-      - for i in {1..8}; do
+      - |
+        for i in {1..8}
+        do
           aws cloudformation deploy \
-          --stack-name t1-stack-$i \
-          --template-file template1.yaml \
-          --region ap-south-1 \
-          --capabilities CAPABILITY_NAMED_IAM &
+            --stack-name t1-stack-$i \
+            --template-file template1.yaml \
+            --region ap-south-1 \
+            --capabilities CAPABILITY_NAMED_IAM &
         done
 
       - echo "Deploying Template2 stacks"
-      - for i in {1..10}; do
+      - |
+        for i in {1..10}
+        do
           aws cloudformation deploy \
-          --stack-name t2-stack-$i \
-          --template-file template2.yaml \
-          --region ap-south-1 \
-          --capabilities CAPABILITY_IAM &
+            --stack-name t2-stack-$i \
+            --template-file template2.yaml \
+            --region ap-south-1 \
+            --capabilities CAPABILITY_IAM &
         done
 
       - echo "Deploying Template3 stacks"
-      - for i in {1..10}; do
+      - |
+        for i in {1..10}
+        do
           aws cloudformation deploy \
-          --stack-name t3-stack-$i \
-          --template-file template3.yaml \
-          --region ap-south-1 \
-          --capabilities CAPABILITY_IAM &
+            --stack-name t3-stack-$i \
+            --template-file template3.yaml \
+            --region ap-south-1 \
+            --capabilities CAPABILITY_IAM &
         done
 
       - wait
 
   post_build:
     commands:
-      - echo "All stack deployments triggered"
+      - echo "All stack deployments completed"

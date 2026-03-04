@@ -1,0 +1,39 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: Dependent Stack
+
+Parameters:
+
+  ParentExportName:
+    Type: String
+
+Resources:
+
+  MyLambdaRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service: lambda.amazonaws.com
+            Action: sts:AssumeRole
+      ManagedPolicyArns:
+        - arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole
+
+  MyLambda:
+    Type: AWS::Lambda::Function
+    Properties:
+      Runtime: nodejs18.x
+      Handler: index.handler
+      Role: !GetAtt MyLambdaRole.Arn
+
+      Environment:
+        Variables:
+          BUCKET:
+            Fn::ImportValue:
+              Ref: ParentExportName
+
+      Code:
+        ZipFile: |
+          exports.handler = async () => "OK";

@@ -1,0 +1,31 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: Parent Heavy Stack (No EC2)
+
+Resources:
+
+  SharedBucket:
+    Type: AWS::S3::Bucket
+
+  MyTable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      BillingMode: PAY_PER_REQUEST
+      AttributeDefinitions:
+        - AttributeName: Id
+          AttributeType: S
+      KeySchema:
+        - AttributeName: Id
+          KeyType: HASH
+
+  MyQueue:
+    Type: AWS::SQS::Queue
+
+  MyTopic:
+    Type: AWS::SNS::Topic
+
+Outputs:
+
+  BucketExport:
+    Value: !Ref SharedBucket
+    Export:
+      Name: !Sub "${AWS::StackName}-BucketExport"
